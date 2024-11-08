@@ -10,16 +10,17 @@ jobs:
   deploy:
     runs-on: self-hosted
 
-  steps:
-    - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-    - name: Use Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: "20"
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "20"
 
-    - name: Install dependencies
-      run: npm i
-        pm2 stop 0
-        pm2 start 0
-        pm2 save
+      - name: Install dependencies and restart PM2
+        run: |
+          npm install
+          pm2 stop 0 || true   # Stop the PM2 process with ID 0, ignore error if not running
+          pm2 start 0          # Start the PM2 process with ID 0
+          pm2 save
